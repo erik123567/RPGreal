@@ -140,7 +140,7 @@ MonoBehaviour:
   walkCursor: {fileID: 2800000, guid: a61ade208f35d7448bd30ec862854090, type: 3}
   targetCursor: {fileID: 2800000, guid: 3968cab5f49f66844bca50e061c426b8, type: 3}
   unknownCursor: {fileID: 2800000, guid: 19f72dfac6fb6d344a63f3a7d41ca45c, type: 3}
-  cursorHotspot: {x: 96, y: 96}
+  cursorHotspot: {x: 0, y: 0}
 --- !u!114 &114112056655490490
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1192232588402776}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24b36bc8004d8224eb4fb7b402b4bfd7, type: 3}
   m_Name: 
