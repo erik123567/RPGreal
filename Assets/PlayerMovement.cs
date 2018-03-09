@@ -5,6 +5,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 [RequireComponent(typeof (ThirdPersonCharacter))]
 public class PlayerMovement : MonoBehaviour
 {
+   bool isInDirectMode = false;
     public float walkMoveStopRadius = 0.2f;
     ThirdPersonCharacter m_Character;   // A reference to the ThirdPersonCharacter on the object
     CameraRaycaster cameraRaycaster;
@@ -21,6 +22,34 @@ public class PlayerMovement : MonoBehaviour
     // Fixed update is called in sync with physics
     private void FixedUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.G)) // g for gamepad
+        {
+            isInDirectMode = !isInDirectMode;
+        }
+
+        if (isInDirectMode)
+        {
+
+        }
+        else
+        {
+            ProcessMouseMovement();
+        }
+     
+
+    }
+
+    private void ProcessDirectMovement()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        Vector3 m_CamForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+       Vector3 m_Move = v * m_CamForward + h * Camera.main.transform.right;
+        m_Character.Move(m_Move, false, false);
+    }
+
+    private void ProcessMouseMovement()
+    {
         if (Input.GetMouseButton(0))
         {
             print("Cursor raycast hit" + cameraRaycaster.layerHit);
@@ -36,10 +65,10 @@ public class PlayerMovement : MonoBehaviour
                     print("unexpecterd latyer found");
                     return;
             }
-           
+
         }
         var playerToClickPoint = currentClickTarget - transform.position;
-        if(playerToClickPoint.magnitude >= walkMoveStopRadius)
+        if (playerToClickPoint.magnitude >= walkMoveStopRadius)
         {
             m_Character.Move(currentClickTarget - transform.position, false, false);
         }
@@ -47,7 +76,6 @@ public class PlayerMovement : MonoBehaviour
         {
             m_Character.Move(Vector3.zero, false, false);
         }
-      
     }
 }
 
