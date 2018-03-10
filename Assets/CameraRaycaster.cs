@@ -7,7 +7,7 @@ public class CameraRaycaster : MonoBehaviour
         Layer.Walkable
     };
 
-   [SerializeField] float distanceToBackground = 100f;
+    [SerializeField] float distanceToBackground = 100f;
     Camera viewCamera;
 
     RaycastHit raycastHit;
@@ -22,9 +22,15 @@ public class CameraRaycaster : MonoBehaviour
         get { return layerHit; }
     }
 
+    public delegate void OnLayerChange(Layer newLayer); // declare delegate type
+    public event OnLayerChange onLayerChange; // instantiate an observer set
+
+    
+
     void Start() // TODO Awake?
     {
         viewCamera = Camera.main;
+
     }
 
     void Update()
@@ -36,7 +42,13 @@ public class CameraRaycaster : MonoBehaviour
             if (hit.HasValue)
             {
                 raycastHit = hit.Value;
+                if(layerHit != layer)
+                {
+                    layerHit = layer;
+                    onLayerChange(layer); // call the delegates when teh cursor layer changes
+                }
                 layerHit = layer;
+
                 return;
             }
         }

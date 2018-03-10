@@ -5,17 +5,17 @@ using UnityEngine;
 public class CursorAffordance: MonoBehaviour {
     [SerializeField] Texture2D walkCursor, targetCursor, unknownCursor = null;
     [SerializeField] Vector2 cursorHotspot = new Vector2(0,0);
-    CameraRaycaster camerRayCaster;
+    CameraRaycaster cameraRayCaster;
 	// Use this for initialization
 	void Start () {
-        camerRayCaster = GetComponentInChildren<CameraRaycaster>();
-
+        cameraRayCaster = GetComponentInChildren<CameraRaycaster>();
+        cameraRayCaster.onLayerChange += OnLayerChange; //registering
     }
 	
-	// Update is called once per frame
-	void LateUpdate () {
-
-        switch (camerRayCaster.currentLayerHit)
+	// only called when layer changes
+	void OnLayerChange (Layer newLayer) {
+        print("cusor over new layer");
+        switch (newLayer)
         {
             case Layer.Walkable:
                 Cursor.SetCursor(walkCursor, cursorHotspot, CursorMode.Auto);
