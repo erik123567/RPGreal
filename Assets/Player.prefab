@@ -657,6 +657,7 @@ GameObject:
   - component: {fileID: 114722637340908674}
   - component: {fileID: 114448068603023918}
   - component: {fileID: 114952798072109900}
+  - component: {fileID: 114364239257571498}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2059,7 +2060,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1386772318198540}
-  m_LocalRotation: {x: 0.5326752, y: 0.070340455, z: 0.83613276, w: -0.110415146}
+  m_LocalRotation: {x: 0.53267515, y: 0.07034045, z: 0.83613265, w: -0.11041513}
   m_LocalPosition: {x: 0.000022271464, y: -0.00006150465, z: 0.026027026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2486,6 +2487,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114364239257571498
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1479469910338004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c05bad065f556ed42b89cd8214b8c67c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealthPoints: 100
 --- !u!114 &114448068603023918
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2497,6 +2510,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 413fc6f2d856c334fb28165a00f509ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  walkMoveStopRadius: 0.2
+  attackMoveStopRadius: 5
 --- !u!114 &114722637340908674
 MonoBehaviour:
   m_ObjectHideFlags: 1

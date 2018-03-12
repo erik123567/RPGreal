@@ -2,81 +2,104 @@ using System;
 using UnityEngine;
 using UnityStandardAssets.Characters.ThirdPerson;
 
-[RequireComponent(typeof (ThirdPersonCharacter))]
+[RequireComponent(typeof(ThirdPersonCharacter))]
 public class PlayerMovement : MonoBehaviour
 {
-   bool isInDirectMode = false;
-    public float walkMoveStopRadius = 0.2f;
+    [SerializeField] float walkMoveStopRadius = 0.2f;
+    [SerializeField] float attackMoveStopRadius = 5f;
+
+
     ThirdPersonCharacter thirdPersonCharacter;   // A reference to the ThirdPersonCharacter on the object
     CameraRaycaster cameraRaycaster;
-    Vector3 currentClickTarget;
-  
-        
+    Vector3 currentDestination, clickPoint;
+
+    bool isInDirectMode = false;
+
     private void Start()
     {
         cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         thirdPersonCharacter = GetComponent<ThirdPersonCharacter>();
-        currentClickTarget = transform.position;
+        currentDestination = transform.position;
     }
 
     // Fixed update is called in sync with physics
     private void FixedUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.G)) // g for gamepad
+        if (Input.GetKeyDown(KeyCode.G)) // G for gamepad. TODO add to menu
         {
-            isInDirectMode = !isInDirectMode;
-            currentClickTarget = transform.position;
+            isInDirectMode = !isInDirectMode; // toggle mode
+            currentDestination = transform.position; // clear the click target
         }
 
         if (isInDirectMode)
         {
-
+            ProcessDirectMovement();
         }
         else
         {
             ProcessMouseMovement();
         }
-     
-
     }
 
     private void ProcessDirectMovement()
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        Vector3 cameraFoward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
-       Vector3 movement = v * cameraFoward + h * Camera.main.transform.right;
+
+        // calculate camera relative direction to move:
+        Vector3 cameraForward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 movement = v * cameraForward + h * Camera.main.transform.right;
+
         thirdPersonCharacter.Move(movement, false, false);
     }
 
     private void ProcessMouseMovement()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(1))
         {
-           
+            clickPoint = cameraRaycaster.hit.point;
             switch (cameraRaycaster.currentLayerHit)
             {
                 case Layer.Walkable:
-                    currentClickTarget = cameraRaycaster.hit.point;  // So not set in default case
+                    currentDestination = ShortDestination(clickPoint, walkMoveStopRadius);
                     break;
                 case Layer.Enemy:
-                    print("not moving to enemy");
+                    currentDestination = ShortDestination(clickPoint, attackMoveStopRadius);
                     break;
                 default:
-                    print("unexpecterd latyer found");
+                    print("Unexpected layer found");
                     return;
             }
-
         }
-        var playerToClickPoint = currentClickTarget - transform.position;
-        if (playerToClickPoint.magnitude >= walkMoveStopRadius)
+
+        WalkToDestination();
+    }
+
+    private void WalkToDestination()
+    {
+        var playerToClickPoint = currentDestination - transform.position;
+        if (playerToClickPoint.magnitude >= 0)
         {
-            thirdPersonCharacter.Move(currentClickTarget - transform.position, false, false);
+            thirdPersonCharacter.Move(playerToClickPoint, false, false);
         }
         else
         {
             thirdPersonCharacter.Move(Vector3.zero, false, false);
         }
     }
-}
 
+    private Vector3 ShortDestination(Vector3 destination, float shortening)
+    {
+        Vector3 reductionVector = (destination - transform.position).normalized * shortening;
+        return destination - reductionVector;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawLine(transform.position, currentDestination);
+        Gizmos.DrawSphere(currentDestination, .1f);
+        Gizmos.DrawSphere(clickPoint, 0.15f);
+
+    }
+}
